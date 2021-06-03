@@ -1,0 +1,6 @@
+[submodule "pico/pico-sdk"]
+	path = pico/pico-sdk
+	url = https://github.com/raspberrypi/pico-sdk.git
+[submodule "pico/lib/libtomcrypt"]
+	path = pico/lib/libtomcrypt
+	url = https://github.com/libtom/libtomcrypt.git
