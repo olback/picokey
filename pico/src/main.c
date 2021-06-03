@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include "pico/stdlib.h"
 
+#include <tomcrypt.h>
+
 int main() {
 
     // Init stdio

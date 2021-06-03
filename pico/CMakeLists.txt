@@ -9,13 +9,17 @@ project(picokey)
 # initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# libtomcrypt
+include_directories(${CMAKE_SOURCE_DIR}/lib/libtomcrypt/src/headers)
+link_directories(${CMAKE_SOURCE_DIR}/lib/libtomcrypt)
+
 # rest of your project
 add_executable(picokey
     src/main.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(picokey pico_stdlib)
+target_link_libraries(picokey pico_stdlib tomcrypt)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(picokey 1)

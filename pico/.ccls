@@ -28,6 +28,8 @@ clang
 -I./pico-sdk/src/host/pico_printf/include/
 -I./pico-sdk/src/host/pico_stdlib/include/
 
+-I./lib/libtomcrypt/src/headers/
+
 -I./pico-sdk/src/boards/include/boards/
 -I./build/generated/pico_base/
 -I./include/
