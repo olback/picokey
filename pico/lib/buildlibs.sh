@@ -1,8 +1,13 @@
 #!/bin/bash
 
+set -e
+
 cd lib/libtomcrypt
-CC=arm-none-eabi-gcc make -j$(nproc) CFLAGS="-DLTC_NOTHING -DLTC_DER -DLTC_MRSA"
-cd ..
+CC=arm-none-eabi-gcc make -j$(nproc) CFLAGS="-mcpu=cortex-m0plus -mtune=cortex-m0plus -DLTC_NOTHING -DLTC_DER -DLTC_MRSA -DLTC_BASE64"
+cd ../..
 
-
+cd lib/keys
+unset CARGO_TARGET_DIR
+cargo build --release --target thumbv6m-none-eabi
+cd ../..
 

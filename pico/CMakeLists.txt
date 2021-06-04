@@ -13,13 +13,17 @@ pico_sdk_init()
 include_directories(${CMAKE_SOURCE_DIR}/lib/libtomcrypt/src/headers)
 link_directories(${CMAKE_SOURCE_DIR}/lib/libtomcrypt)
 
+# keys
+include_directories(${CMAKE_SOURCE_DIR}/lib/keys)
+link_directories(${CMAKE_SOURCE_DIR}/lib/keys/target/thumbv6m-none-eabi/release)
+
 # rest of your project
 add_executable(picokey
     src/main.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(picokey pico_stdlib tomcrypt)
+target_link_libraries(picokey pico_stdlib tomcrypt keys)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(picokey 1)

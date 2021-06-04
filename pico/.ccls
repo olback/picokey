@@ -29,6 +29,7 @@ clang
 -I./pico-sdk/src/host/pico_stdlib/include/
 
 -I./lib/libtomcrypt/src/headers/
+-I./lib/keys/
 
 -I./pico-sdk/src/boards/include/boards/
 -I./build/generated/pico_base/

@@ -1,13 +1,16 @@
 [package]
-name = "host"
+name = "keys"
 version = "0.1.0"
-authors = ["Edwin Svensson <host@olback.net>"]
+authors = ["Edwin Svensson <keys@olback.net>"]
 edition = "2018"
+build = "build.rs"
+
+[lib]
+crate-type = ["staticlib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serialport = "4"
-rsa = "0.4"
-base64 = "0.13"
-rand = "0.8"
+
+[build-dependencies]
+cbindgen = "0.19"

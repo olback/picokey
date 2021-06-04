@@ -9,7 +9,7 @@ if [ ! -d $MOUNT_PATH ]; then
     udisksctl mount -b $DISK
 fi
 
-cp picokey.uf2 $MOUNT_PATH
+cp build/picokey.uf2 $MOUNT_PATH
 
 echo 'Done'
 
