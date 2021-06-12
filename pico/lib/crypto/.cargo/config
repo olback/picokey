@@ -1,0 +1,13 @@
+# rp2040 is a Cortex-M0+ and thus thumbv6m
+
+[build]
+target = "thumbv6m-none-eabi"
+
+[target.thumbv6m-none-eabi]
+#runner = "arm-none-eabi-gdb"
+runner = "./runner.sh"
+rustflags = [
+  "-C", "link-args=-mcpu=cortex-m0plus",
+  "-C", "link-args=-march=armv6-m"
+]
+

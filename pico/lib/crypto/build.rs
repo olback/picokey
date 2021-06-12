@@ -10,5 +10,5 @@ fn main() {
         .with_language(cbindgen::Language::C)
         .generate()
         .expect("Unable to generate bindings")
-        .write_to_file("keys.h");
+        .write_to_file("crypto.h");
 }
