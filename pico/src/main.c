@@ -6,13 +6,21 @@
 #include <crypto.h>
 #include <pico/stdio.h>
 #include <pico/stdlib.h>
+#include <pico/unique_id.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
-#define INPUT_BUFFER_LENGTH 256
+#define INPUT_BUFFER_SIZE 256
 
 size_t read_line(uint8_t *buf, size_t max_len, char eol);
+void send_error(int32_t code);
+
+#define CHECK_ERROR(input) \
+    if ((input) != 0) {    \
+        send_error(input); \
+        continue;          \
+    }
 
 int main() {
     // Init stdio
@@ -23,39 +31,55 @@ int main() {
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
 
+    // Get uuid
+    // This is fine as long as PICO_UNIQUE_BOARD_ID_SIZE_BYTES is 8 bytes
+    uint64_t unique_id;
+    pico_get_unique_board_id((pico_unique_board_id_t *)&unique_id);
+
     for (;;) {
-        uint8_t data_in[INPUT_BUFFER_LENGTH] = {0};
-        size_t data_in_len = read_line(data_in, INPUT_BUFFER_LENGTH, '\n');
-        printf("(%ld) %s\n", data_in_len, data_in);
+        uint32_t res;
+        uint8_t data_in[INPUT_BUFFER_SIZE] = {0};
+        size_t data_in_len = read_line(data_in, INPUT_BUFFER_SIZE, '\n');
+        // printf("(%ld) %s\n", data_in_len, data_in);
         gpio_put(LED_PIN, 1);
 
-        const uint8_t *key = (uint8_t *)"an example very very secret key.";
-        const uint32_t key_len = strlen((char *)key);
-        printf("(%d) %s\n", key_len, key);
+        // printf("%s\n", data_in);
 
-        const uint8_t *iv = (uint8_t *)"unique nonce";
-        const uint32_t iv_len = strlen((char *)iv);
-        printf("(%d) %s\n", iv_len, iv);
+        // Decode incoming data
+        uint8_t buf[INPUT_BUFFER_SIZE] = {0};
+        uint32_t decode_buf_len = INPUT_BUFFER_SIZE;
+        res = base64_decode(data_in, data_in_len, buf, &decode_buf_len);
+        CHECK_ERROR(res);
 
-        uint8_t data_out[INPUT_BUFFER_LENGTH] = {0};
-        uint32_t data_out_len = INPUT_BUFFER_LENGTH;
+        // Decrypt decoded data
+        uint32_t decrypt_buf_len = INPUT_BUFFER_SIZE;
+        res = aes_gcm_siv_decrypt(get_key_ptr(), KEY_LENGTH, get_iv_ptr(),
+                                  IV_LENGTH, buf, decode_buf_len, buf,
+                                  &decrypt_buf_len);
+        CHECK_ERROR(res);
 
-        int32_t res = aes_gcm_siv_encrypt(key, key_len, iv, iv_len, data_in,
-                                          data_in_len, data_out, &data_out_len);
-        printf("Res: %d, (%d) %s\n", res, data_out_len, data_out);
-
-        uint32_t base64_encode_len = INPUT_BUFFER_LENGTH;
-        res =
-            base64_encode(data_out, data_out_len, data_out, &base64_encode_len);
-        printf("Base64 enocde: %d, (%d) %s\n", res, base64_encode_len,
-               data_out);
+        // TODO:
+        // [ garbage[0..16] + uid[..] + garbage[16..32] ] = 40
+        // or some other pattern
+        // encrypt, encode, send
 
         gpio_put(LED_PIN, 0);
     }
     return 0;
 }
 
-void led_off() { gpio_put(PICO_DEFAULT_LED_PIN, 0); }
+void send_error(int32_t code) {
+    uint8_t buf[32] = {0};
+    *((int32_t *)buf) = code;
+    uint8_t base64_buf[64] = {0};
+    uint32_t base64_buf_len = 64;
+    int32_t res = base64_encode(buf, 32, base64_buf, &base64_buf_len);
+    if (res == 0) {
+        printf("%s\n", base64_buf);
+    } else {
+        printf("Invalid\n");
+    }
+}
 
 void panic_handler() {
     while (1) {

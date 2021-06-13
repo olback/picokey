@@ -15,6 +15,8 @@ clang
 -I./pico-sdk/src/common/pico_stdlib/include/
 -I./pico-sdk/src/common/pico_time/include/
 
+-I./pico-sdk/src/rp2_common/pico_unique_id/include/
+
 -I./pico-sdk/src/host/hardware_divider/include/
 -I./pico-sdk/src/host/hardware_sync/include/
 -I./pico-sdk/src/host/hardware_uart/include/

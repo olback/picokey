@@ -19,7 +19,7 @@ add_executable(picokey
 )
 
 # Add pico_stdlib library which aggregates commonly used features
-target_link_libraries(picokey pico_stdlib crypto)
+target_link_libraries(picokey pico_stdlib pico_unique_id crypto)
 
 # enable usb output, disable uart output
 pico_enable_stdio_usb(picokey 1)
