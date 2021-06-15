@@ -1,5 +1,5 @@
 [package]
-name = "host"
+name = "picokey"
 version = "0.1.0"
 authors = ["Edwin Svensson <host@olback.net>"]
 edition = "2018"

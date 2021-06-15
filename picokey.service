@@ -1,0 +1,8 @@
+[Unit]
+Description=Picokey
+
+[Service]
+ExecStart=%h/.cargo/bin/picokey
+
+[Install]
+WantedBy=default.target
