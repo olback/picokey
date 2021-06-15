@@ -6,4 +6,6 @@ pub enum Error {
     Aead(aes_gcm_siv::aead::Error),
     #[noWrap]
     Code(i32),
+    #[noWrap]
+    Unauthorized,
 }

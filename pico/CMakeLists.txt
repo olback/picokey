@@ -16,6 +16,7 @@ link_directories(${CMAKE_SOURCE_DIR}/lib/crypto/target/thumbv6m-none-eabi/releas
 # rest of your project
 add_executable(picokey
     src/main.c
+    src/rust_compat.c
 )
 
 # Add pico_stdlib library which aggregates commonly used features
